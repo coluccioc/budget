@@ -30,3 +30,12 @@
 *.exe
 *.out
 *.app
+
+#folders
+build/
+
+# Python cache & virtual env
+__pycache__/
+*.pyc
+*.pyo
+env/

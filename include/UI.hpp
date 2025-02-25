@@ -1,7 +1,7 @@
-//#ifndef UI_HPP
+#ifndef UI_HPP
 #define UI_HPP
 
-/*
+
 #include <QWidget>
 #include <QPushButton>
 #include <QLabel>
@@ -9,11 +9,11 @@
 #include <QVBoxLayout>
 #include <QTableWidget>
 #include <vector>
-#include "BudgetManager.hpp"  // Include budget manager class
+//#include "BudgetManager.hpp"  // Include budget manager class
 
 
 class UI : public QWidget {
     Q_OBJECT
-}
+};
 
-*/
+#endif

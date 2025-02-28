@@ -1,5 +1,4 @@
-#ifndef UI_HPP
-#define UI_HPP
+#pragma once
 
 
 #include <QWidget>
@@ -9,11 +8,20 @@
 #include <QVBoxLayout>
 #include <QTableWidget>
 #include <vector>
+#include <iostream>
+#include <limits>
 //#include "BudgetManager.hpp"  // Include budget manager class
 
 
-class UI : public QWidget {
-    Q_OBJECT
-};
+class UI /*: public QWidget */{
+public:
+    void run();
+    //Q_OBJECT
 
-#endif
+private:
+    void displayMenu();
+    int handleInput(int choice);
+    void addExpense();
+    void viewExpenses();
+
+};

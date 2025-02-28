@@ -1,4 +1,4 @@
-#include "include/UI.hpp"
+#include "../include/UI.hpp"
 
 void UI::run(){
     int choice;
@@ -12,7 +12,7 @@ void UI::run(){
     }while(choice != 0);
 }
 
-void displayMenu(){
+void UI::displayMenu(){
     std::cout << "+++ Budget Menu +++\n";
     std::cout << "1. Add expense\n";
     std::cout << "2. View expenses\n";
@@ -33,4 +33,25 @@ int UI::handleInput(int choice){
             std::cout << "Invalid selection, please try again\n";
             return 0;
     }
+}
+
+void UI::addExpense(){
+    std::string name;
+    double amount;
+    std::cout << "Enter expense name: ";
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    std::getline(std::cin, name);
+
+    std::cout << "Enter expense amount: ";
+    while(!(std::cin >> amount) || amount < 0){
+        std::cout << "Invalid input, please enter a number: ";
+        std::cin.clear();
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    }
+    
+    std::cout << "Expense \" " << name << " \" added successfully. $" << amount << "\n";
+}
+
+void UI::viewExpenses(){
+    std::cout << "Viewing expenses...\n";
 }

@@ -1,5 +1,5 @@
 #pragma once
-#include "include/UI.hpp"
+#include "../include/UI.hpp"
 
 int main(){
     UI appUI;

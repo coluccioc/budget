@@ -10,6 +10,8 @@
 #include <vector>
 #include <iostream>
 #include <limits>
+#include "../include/Transaction.hpp"
+#include <set>
 //#include "BudgetManager.hpp"  // Include budget manager class
 
 
@@ -23,5 +25,5 @@ private:
     int handleInput(int choice);
     void addExpense();
     void viewExpenses();
-
+    std::multiset<Transaction> transactions;
 };

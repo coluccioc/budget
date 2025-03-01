@@ -36,10 +36,15 @@ int UI::handleInput(int choice){
 }
 
 void UI::addExpense(){
+    std::string date;
     std::string name;
     double amount;
+    std::string category;
+
+    std::cout << "Enter expense date (YYYY/MM/DD): ";
+    std::getline(std::cin, date);
+
     std::cout << "Enter expense name: ";
-    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
     std::getline(std::cin, name);
 
     std::cout << "Enter expense amount: ";
@@ -48,10 +53,19 @@ void UI::addExpense(){
         std::cin.clear();
         std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
     }
-    
+
+    std::cout << "Enter expense category: ";
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    std::getline(std::cin, category);
+
+    transactions.insert({name, amount, date, category});
+
     std::cout << "Expense \" " << name << " \" added successfully. $" << amount << "\n";
 }
 
 void UI::viewExpenses(){
     std::cout << "Viewing expenses...\n";
+    for(auto& t: transactions){
+        std::cout << t.date << " " << t.description << " $" << t.amount << " " << t.category << "\n";
+    }
 }

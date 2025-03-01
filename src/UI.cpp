@@ -42,6 +42,7 @@ void UI::addExpense(){
     std::string category;
 
     std::cout << "Enter expense date (YYYY/MM/DD): ";
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
     std::getline(std::cin, date);
 
     std::cout << "Enter expense name: ";

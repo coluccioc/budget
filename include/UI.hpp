@@ -12,7 +12,7 @@
 #include <limits>
 #include "../include/Transaction.hpp"
 #include <set>
-//#include "BudgetManager.hpp"  // Include budget manager class
+#include "../include/BudgetManager.hpp"  // Include budget manager class
 
 
 class UI /*: public QWidget */{
@@ -21,9 +21,11 @@ public:
     //Q_OBJECT
 
 private:
+    //Probably making this static once I have a DB running. For now we instantiate
+    BudgetManager bm;
     void displayMenu();
     int handleInput(int choice);
     void addExpense();
     void viewExpenses();
-    std::multiset<Transaction> transactions;
+    std::string trim(const std::string& str);
 };

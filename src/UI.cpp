@@ -1,3 +1,4 @@
+#pragma once
 #include "../include/UI.hpp"
 
 void UI::run(){
@@ -59,14 +60,23 @@ void UI::addExpense(){
     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
     std::getline(std::cin, category);
 
-    transactions.insert({name, amount, date, category});
+    Transaction t{name, amount, date, category};
+
+    bm.addExpense(t);
 
     std::cout << "Expense \" " << name << " \" added successfully. $" << amount << "\n";
 }
 
 void UI::viewExpenses(){
     std::cout << "Viewing expenses...\n";
-    for(auto& t: transactions){
+    for(auto& t: bm.getTransactions()){
         std::cout << t.date << " " << t.description << " $" << t.amount << " " << t.category << "\n";
     }
+}
+
+std::string trim(const std::string& str) {
+    size_t first = str.find_first_not_of(" \t\n\r\f\v");
+    if (first == std::string::npos) return ""; // All whitespace
+    size_t last = str.find_last_not_of(" \t\n\r\f\v");
+    return str.substr(first, (last - first + 1));
 }

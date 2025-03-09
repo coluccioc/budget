@@ -12,12 +12,15 @@ const std::multiset<Transaction>& BudgetManager::getTransactions() const{
 ValidationResult BudgetManager::validateDate(const std::string& date){
     if (date.empty()){
     }
+    return ValidationResult::SUCCESS;
 }
 
-ValidationResult BudgetManager::validateAmount(double amount){
+ValidationResult BudgetManager::validateAmount(const std::string& amount){
     //Do stuff
+    return ValidationResult::SUCCESS;
 }
 
 ValidationResult BudgetManager::validateString(const std::string& str){
     //Do stuff
+    return ValidationResult::SUCCESS;
 }

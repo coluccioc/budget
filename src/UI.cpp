@@ -36,35 +36,83 @@ int UI::handleInput(int choice){
     }
 }
 
+std::string validationResponse(ValidationResult result){
+    switch(result){
+        case ValidationResult::SUCCESS:
+            return "";
+        case ValidationResult::EMPTY:
+            return "Cannot be empty";
+        case ValidationResult::INVALID_DATE:
+            return "Date must be in format YYYY/MM/DD";
+        case ValidationResult::NEGATIVE:
+            return "Cannot be negative";
+        case ValidationResult::EXCEEDS:
+            return "Exceeds limit";
+        case ValidationResult::NONNUMERIC:
+            return "Must be numeric";
+        default:
+            return "";
+    }
+}
+
 void UI::addExpense(){
+    ValidationResult result;
     std::string date;
-    std::string name;
+    std::string description;
+    std::string amountStr;
     double amount;
     std::string category;
 
-    std::cout << "Enter expense date (YYYY/MM/DD): ";
-    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-    std::getline(std::cin, date);
+    do{
+        std::cout << "Enter expense date (YYYY/MM/DD): ";
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        std::getline(std::cin, date);
+        date = UI::trim(date);
 
+        result = BudgetManager::validateDate(date);
+        if(result != ValidationResult::SUCCESS){
+            std::cout << "Invalid date: " << validationResponse(result) << "\n";
+        }
+    }while(result != ValidationResult::SUCCESS);
+
+
+    do{
     std::cout << "Enter expense name: ";
-    std::getline(std::cin, name);
+    std::getline(std::cin, description);
+    description = UI::trim(description);
 
-    std::cout << "Enter expense amount: ";
-    while(!(std::cin >> amount) || amount < 0){
-        std::cout << "Invalid input, please enter a number: ";
+    result = BudgetManager::validateString(description);
+    if(result != ValidationResult::SUCCESS){
+        std::cout << "Invalid name: " << validationResponse(result) << "\n";
+    }
+    }while(result != ValidationResult::SUCCESS);
+
+
+    do{
+        std::cout << "Enter expense amount: ";
         std::cin.clear();
         std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-    }
+        std::getline(std::cin, amountStr);
+        amountStr = UI::trim(amountStr);
+
+        result = BudgetManager::validateAmount((amountStr));
+        if(result != ValidationResult::SUCCESS){
+            std::cout << "Invalid amount: " << validationResponse(result) << "\n";
+        }
+        else {
+            amount = std::stod(amountStr);
+        }
+    }while(result != ValidationResult::SUCCESS);
 
     std::cout << "Enter expense category: ";
     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
     std::getline(std::cin, category);
 
-    Transaction t{name, amount, date, category};
+    Transaction t{description, amount, date, category};
 
     bm.addExpense(t);
 
-    std::cout << "Expense \" " << name << " \" added successfully. $" << amount << "\n";
+    std::cout << "Expense \" " << description << " \" added successfully. $" << amount << "\n";
 }
 
 void UI::viewExpenses(){
@@ -74,7 +122,7 @@ void UI::viewExpenses(){
     }
 }
 
-std::string trim(const std::string& str) {
+std::string UI::trim(const std::string& str) {
     size_t first = str.find_first_not_of(" \t\n\r\f\v");
     if (first == std::string::npos) return ""; // All whitespace
     size_t last = str.find_last_not_of(" \t\n\r\f\v");

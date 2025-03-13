@@ -2,10 +2,17 @@
 #include "../include/UI.hpp"
 
 void UI::run(){
+    std::string choiceStr;
     int choice;
     do{
         displayMenu();
-        std::cin >> choice;
+        std::getline(std::cin, choiceStr);
+        try{
+            choice = std::stoi(choiceStr);
+        }
+        catch(...){
+            choice = -1;
+        }
         if(handleInput(choice))
         {
             break;
@@ -65,7 +72,6 @@ void UI::addExpense(){
 
     do{
         std::cout << "Enter expense date (YYYY/MM/DD): ";
-        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
         std::getline(std::cin, date);
         date = UI::trim(date);
 
@@ -90,8 +96,6 @@ void UI::addExpense(){
 
     do{
         std::cout << "Enter expense amount: ";
-        std::cin.clear();
-        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
         std::getline(std::cin, amountStr);
         amountStr = UI::trim(amountStr);
 
@@ -100,13 +104,21 @@ void UI::addExpense(){
             std::cout << "Invalid amount: " << validationResponse(result) << "\n";
         }
         else {
-            amount = std::stod(amountStr);
+            amount = std::round(std::stod(amountStr) * 100) / 100; //rounding to nearest 100th
         }
     }while(result != ValidationResult::SUCCESS);
 
-    std::cout << "Enter expense category: ";
-    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-    std::getline(std::cin, category);
+    
+    do{
+        std::cout << "Enter expense category: ";
+        std::getline(std::cin, category);
+        category = UI::trim(category);
+
+        result = BudgetManager::validateString(category);
+        if (result != ValidationResult::SUCCESS){
+            std::cout << "Invalid category: " << validationResponse(result) << "\n";
+        }
+    }while(result != ValidationResult::SUCCESS);
 
     Transaction t{description, amount, date, category};
 
@@ -120,6 +132,7 @@ void UI::viewExpenses(){
     for(auto& t: bm.getTransactions()){
         std::cout << t.date << " " << t.description << " $" << t.amount << " " << t.category << "\n";
     }
+    std::this_thread::sleep_for(std::chrono::seconds(2));
 }
 
 std::string UI::trim(const std::string& str) {

@@ -13,6 +13,9 @@
 #include "../include/Transaction.hpp"
 #include <set>
 #include "../include/BudgetManager.hpp"  // Include budget manager class
+#include <cmath> // for rounding
+#include <thread>  // For sleep_for
+#include <chrono>  // For time units
 
 
 class UI /*: public QWidget */{

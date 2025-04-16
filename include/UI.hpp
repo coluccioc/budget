@@ -7,18 +7,18 @@
 #include <QLineEdit>
 #include <QVBoxLayout>
 #include <QTableWidget>
-#include <vector>
 #include <iostream>
 #include <limits>
-#include "../include/Transaction.hpp"
+#include "Transaction.hpp"
 #include <set>
-#include "../include/BudgetManager.hpp"  // Include budget manager class
+#include "BudgetManager.hpp"  // Include budget manager class
 #include <cmath> // for rounding
 #include <thread>  // For sleep_for
 #include <chrono>  // For time units
 
 
-class UI /*: public QWidget */{
+class UI /*: public QWidget */
+{
 public:
     void run();
     //Q_OBJECT

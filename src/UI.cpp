@@ -1,10 +1,12 @@
 #pragma once
 #include "../include/UI.hpp"
 
-void UI::run(){
+void UI::run()
+{
     std::string choiceStr;
     int choice;
-    do{
+    do
+    {
         displayMenu();
         std::getline(std::cin, choiceStr);
         try{
@@ -17,18 +19,22 @@ void UI::run(){
         {
             break;
         }
-    }while(choice != 0);
+    }
+    while(choice != 0);
 }
 
-void UI::displayMenu(){
+void UI::displayMenu()
+{
     std::cout << "+++ Budget Menu +++\n";
     std::cout << "1. Add expense\n";
     std::cout << "2. View expenses\n";
     std::cout << "0. Exit\n";
 }
 
-int UI::handleInput(int choice){
-    switch(choice){
+int UI::handleInput(int choice)
+{
+    switch(choice)
+    {
         case 1:
             addExpense();
             return 0;
@@ -43,14 +49,16 @@ int UI::handleInput(int choice){
     }
 }
 
-std::string validationResponse(ValidationResult result){
-    switch(result){
+std::string validationResponse(ValidationResult result)
+{
+    switch(result)
+    {
         case ValidationResult::SUCCESS:
             return "";
         case ValidationResult::EMPTY:
             return "Cannot be empty";
         case ValidationResult::INVALID_DATE:
-            return "Date must be in format YYYY/MM/DD";
+            return "Date must be in format MM/DD/YYYY";
         case ValidationResult::NEGATIVE:
             return "Cannot be negative";
         case ValidationResult::EXCEEDS:
@@ -62,7 +70,8 @@ std::string validationResponse(ValidationResult result){
     }
 }
 
-void UI::addExpense(){
+void UI::addExpense()
+{
     ValidationResult result;
     std::string date;
     std::string description;
@@ -70,19 +79,28 @@ void UI::addExpense(){
     double amount;
     std::string category;
 
-    do{
-        std::cout << "Enter expense date (YYYY/MM/DD): ";
+    do
+    {
+        std::cout << "Enter expense date (MM/DD/YYYY): ";
         std::getline(std::cin, date);
         date = UI::trim(date);
 
-        result = BudgetManager::validateDate(date);
-        if(result != ValidationResult::SUCCESS){
+        auto normalizedDateStatus = BudgetManager::validateAndNormalizeDate(date);
+        result = normalizedDateStatus.status;
+        if(result != ValidationResult::SUCCESS)
+        {
             std::cout << "Invalid date: " << validationResponse(result) << "\n";
         }
-    }while(result != ValidationResult::SUCCESS);
+        else
+        {
+            date = normalizedDateStatus.normalDate;
+        }
+    }
+    while(result != ValidationResult::SUCCESS);
 
 
-    do{
+    do
+    {
     std::cout << "Enter expense name: ";
     std::getline(std::cin, description);
     description = UI::trim(description);
@@ -91,10 +109,12 @@ void UI::addExpense(){
     if(result != ValidationResult::SUCCESS){
         std::cout << "Invalid name: " << validationResponse(result) << "\n";
     }
-    }while(result != ValidationResult::SUCCESS);
+    }
+    while(result != ValidationResult::SUCCESS);
 
 
-    do{
+    do
+    {
         std::cout << "Enter expense amount: ";
         std::getline(std::cin, amountStr);
         amountStr = UI::trim(amountStr);
@@ -106,10 +126,12 @@ void UI::addExpense(){
         else {
             amount = std::round(std::stod(amountStr) * 100) / 100; //rounding to nearest 100th
         }
-    }while(result != ValidationResult::SUCCESS);
+    }
+    while(result != ValidationResult::SUCCESS);
 
     
-    do{
+    do
+    {
         std::cout << "Enter expense category: ";
         std::getline(std::cin, category);
         category = UI::trim(category);
@@ -118,7 +140,8 @@ void UI::addExpense(){
         if (result != ValidationResult::SUCCESS){
             std::cout << "Invalid category: " << validationResponse(result) << "\n";
         }
-    }while(result != ValidationResult::SUCCESS);
+    }
+    while(result != ValidationResult::SUCCESS);
 
     Transaction t{description, amount, date, category};
 
@@ -127,15 +150,18 @@ void UI::addExpense(){
     std::cout << "Expense \" " << description << " \" added successfully. $" << amount << "\n";
 }
 
-void UI::viewExpenses(){
+void UI::viewExpenses()
+{
     std::cout << "Viewing expenses...\n";
-    for(auto& t: bm.getTransactions()){
+    for(auto& t: bm.getTransactions())
+    {
         std::cout << t.date << " " << t.description << " $" << t.amount << " " << t.category << "\n";
     }
     std::this_thread::sleep_for(std::chrono::seconds(2));
 }
 
-std::string UI::trim(const std::string& str) {
+std::string UI::trim(const std::string& str)
+{
     size_t first = str.find_first_not_of(" \t\n\r\f\v");
     if (first == std::string::npos) return ""; // All whitespace
     size_t last = str.find_last_not_of(" \t\n\r\f\v");

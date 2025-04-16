@@ -3,8 +3,10 @@
 #include <Transaction.hpp>
 #include "date/date.h"
 #include <sstream>
+#include <vector>
 
-enum class ValidationResult{
+enum class ValidationResult
+{
     SUCCESS,
     EMPTY,
     INVALID_DATE,
@@ -13,11 +15,18 @@ enum class ValidationResult{
     EXCEEDS
 };
 
-class BudgetManager{
+struct normalDateStatus
+{
+    ValidationResult status;
+    std::string normalDate;
+};
+
+class BudgetManager
+{
 public:
     void addExpense(const Transaction& t);
     const std::multiset<Transaction>& getTransactions() const;
-    static ValidationResult validateDate(const std::string& date);
+    static normalDateStatus validateAndNormalizeDate(const std::string& date);
     static ValidationResult validateAmount(const std::string& amount);
     static ValidationResult validateString(const std::string& str);
 

@@ -11,60 +11,84 @@
     EXCEEDS
 */
 
-void BudgetManager::addExpense(const Transaction& t){
+void BudgetManager::addExpense(const Transaction& t)
+{
     transactions.insert(t);
 }
 
-const std::multiset<Transaction>& BudgetManager::getTransactions() const{
+const std::multiset<Transaction>& BudgetManager::getTransactions() const
+{
     return transactions;
 }
 
-ValidationResult BudgetManager::validateDate(const std::string& dateStr){
-    if (dateStr.empty()){
-        return ValidationResult::EMPTY;
-    }
-    std::istringstream in1(dateStr);
-    std::istringstream in2(dateStr);
-    date::sys_days date;
-
-    //Try MM/DD/YYYY first
-    in1 >> date::parse("%m/%d/%Y", date);
-    if (!in1.fail() && in1.eof()) {
-        return ValidationResult::SUCCESS;
-    }
-
-    // Try M/D/YY
-    in2 >> date::parse("%m/%d/%y", date);
-    if (!in2.fail() && in2.eof()) {
-        return ValidationResult::SUCCESS;
+normalDateStatus BudgetManager::validateAndNormalizeDate(const std::string& dateStr)
+{
+    const std::vector<std::string> formats = {
+        "%m/%d/%Y", // MM/DD/YYYY
+        "%m-%d-%Y", // MM-DD-YYYY
+        "%Y/%m/%d", // YYYY/MM/DD
+        "%Y-%m-%d", // YYYY-MM-DD
+        "%Y%m%d",   // YYYYMMDD
+        "%m%d%Y"    // MMDDYYYY
+    };
+    normalDateStatus result;
+    if (dateStr.empty())
+    {
+        result.status = ValidationResult::EMPTY;
+        result.normalDate = "";
+        return result;
     }
 
-    return ValidationResult::INVALID_DATE;
+    for (const auto& format : formats)
+    {
+        std::istringstream input(dateStr);
+        date::sys_days parsedDate;
+
+        input >> date::parse(format, parsedDate);
+        if (!input.fail())
+        {
+            result.status = ValidationResult::SUCCESS;
+            result.normalDate = date::format("%Y-%m-%d", parsedDate); //Normalized to YYYY-MM-DD
+            return result;
+        }
+    }
+
+    result.status = ValidationResult::INVALID_DATE;
+    result.normalDate = dateStr; // Return the original string if parsing fails
+    return result;
 }
 
-ValidationResult BudgetManager::validateAmount(const std::string& amount){
+ValidationResult BudgetManager::validateAmount(const std::string& amount)
+{
     //Do stuff
-    if (amount.empty()){
+    if (amount.empty())
+    {
         return ValidationResult::EMPTY;
     }
-    if (amount.find_first_not_of("0123456789.") != std::string::npos){
+    if (amount.find_first_not_of("0123456789.") != std::string::npos)
+    {
         return ValidationResult::NONNUMERIC;
     }
-    if (amount.find_first_of("-") != std::string::npos){
+    if (amount.find_first_of("-") != std::string::npos)
+    {
         return ValidationResult::NEGATIVE;
     }
-    if (std::stod(amount) > 9999999999999999.99){
+    if (std::stod(amount) > 9999999999999999.99)
+    {
         return ValidationResult::EXCEEDS;
     }
     return ValidationResult::SUCCESS;
 }
 
-ValidationResult BudgetManager::validateString(const std::string& str){
+ValidationResult BudgetManager::validateString(const std::string& str)
+{
     //Do stuff
-    if (str.empty()){
+    if (str.empty())
+    {
         return ValidationResult::EMPTY;
     }
-    if (str.length() > 50){
+    if (str.length() > 50)
+    {
         return ValidationResult::EXCEEDS;
     }
     return ValidationResult::SUCCESS;

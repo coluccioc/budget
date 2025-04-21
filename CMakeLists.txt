@@ -46,6 +46,7 @@ add_executable(BudgetApp
     src/main.cpp
     src/UI.cpp
     src/BudgetManager.cpp
+    src/DatabaseManager.cpp
 )
 
 # Include headers

@@ -1,5 +1,5 @@
 #pragma once
-#include "../include/BudgetManager.hpp"
+#include "BudgetManager.hpp"
 
 /*
     VALIDATION RESULT OPTIONS:
@@ -10,15 +10,16 @@
     NONNUMERIC,
     EXCEEDS
 */
-
+BudgetManager::BudgetManager(std::unique_ptr<DatabaseManager> db){}; // Initialize the databse manager
 void BudgetManager::addExpense(const Transaction& t)
 {
-    transactions.insert(t);
+    db->insertTransaction(t);
 }
 
-const std::multiset<Transaction>& BudgetManager::getTransactions() const
+const std::multiset<Transaction>& BudgetManager::getTransactions()
 {
-    return transactions;
+    db->fetchTransactions();
+    return db->getTransactions();
 }
 
 normalDateStatus BudgetManager::validateAndNormalizeDate(const std::string& dateStr)

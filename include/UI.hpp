@@ -15,20 +15,22 @@
 #include <cmath> // for rounding
 #include <thread>  // For sleep_for
 #include <chrono>  // For time units
+#include <cstdlib>
 
 
 class UI /*: public QWidget */
 {
 public:
     void run();
+    UI(std::unique_ptr<BudgetManager> bm);
     //Q_OBJECT
 
 private:
-    //Probably making this static once I have a DB running. For now we instantiate
-    BudgetManager bm;
+    std::unique_ptr<BudgetManager> bm;
     void displayMenu();
     int handleInput(int choice);
     void addExpense();
     void viewExpenses();
+    void runScript(const std::string& scriptPath);
     std::string trim(const std::string& str);
 };

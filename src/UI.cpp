@@ -1,5 +1,6 @@
-#pragma once
 #include "../include/UI.hpp"
+
+UI::UI(std::unique_ptr<BudgetManager> bm) : bm(std::move(bm)) {};
 
 void UI::run()
 {
@@ -28,6 +29,7 @@ void UI::displayMenu()
     std::cout << "+++ Budget Menu +++\n";
     std::cout << "1. Add expense\n";
     std::cout << "2. View expenses\n";
+    std::cout << "3. Run script\n";
     std::cout << "0. Exit\n";
 }
 
@@ -40,6 +42,9 @@ int UI::handleInput(int choice)
             return 0;
         case 2:
             viewExpenses();
+            return 0;
+        case 3:
+            runScript("python src\\script.py");
             return 0;
         case 0:
             return 1;
@@ -145,7 +150,7 @@ void UI::addExpense()
 
     Transaction t{description, amount, date, category};
 
-    bm.addExpense(t);
+    bm->addExpense(t);
 
     std::cout << "Expense \" " << description << " \" added successfully. $" << amount << "\n";
 }
@@ -153,11 +158,16 @@ void UI::addExpense()
 void UI::viewExpenses()
 {
     std::cout << "Viewing expenses...\n";
-    for(auto& t: bm.getTransactions())
+    for(auto& t: bm->getTransactions())
     {
         std::cout << t.date << " " << t.description << " $" << t.amount << " " << t.category << "\n";
     }
     std::this_thread::sleep_for(std::chrono::seconds(2));
+}
+
+void UI::runScript(const std::string& scriptPath)
+{
+    system(scriptPath.c_str());
 }
 
 std::string UI::trim(const std::string& str)

@@ -4,6 +4,7 @@
 #include "date/date.h"
 #include <sstream>
 #include <vector>
+#include "databaseManager.hpp"
 
 enum class ValidationResult
 {
@@ -24,8 +25,9 @@ struct normalDateStatus
 class BudgetManager
 {
 public:
+    BudgetManager(std::unique_ptr<DatabaseManager> db);
     void addExpense(const Transaction& t);
-    const std::multiset<Transaction>& getTransactions() const;
+    const std::multiset<Transaction>& getTransactions();
     static normalDateStatus validateAndNormalizeDate(const std::string& date);
     static ValidationResult validateAmount(const std::string& amount);
     static ValidationResult validateString(const std::string& str);
@@ -33,4 +35,5 @@ public:
 
 private:
     std::multiset<Transaction> transactions;
+    std::unique_ptr<DatabaseManager> db;
 };

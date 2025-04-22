@@ -10,7 +10,7 @@
     NONNUMERIC,
     EXCEEDS
 */
-BudgetManager::BudgetManager(std::unique_ptr<DatabaseManager> db){}; // Initialize the databse manager
+BudgetManager::BudgetManager(std::unique_ptr<DatabaseManager> db) : db(std::move(db)){}; // Initialize the databse manager
 void BudgetManager::addExpense(const Transaction& t)
 {
     db->insertTransaction(t);

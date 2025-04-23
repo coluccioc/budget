@@ -53,6 +53,15 @@ void DatabaseManager::closeDatabase()
         db = nullptr;
     }
 }
+
+bool DatabaseManager::isOpen()
+{
+    if (db) {
+        return true;
+    }
+    return false;
+}
+
 bool DatabaseManager::insertTransaction(const Transaction& transaction)
 {
     // std::cout << "Beginning";
@@ -87,6 +96,7 @@ bool DatabaseManager::fetchTransactions()
         std::cout << "Failed to prepare statement: " << sqlite3_errmsg(db) << std::endl;
         return false;
     }
+    transactions.clear(); // Clear previous transactions
 
     while (sqlite3_step(stmt) == SQLITE_ROW) {
         Transaction transaction;

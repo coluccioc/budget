@@ -1,28 +1,4 @@
-# cmake_minimum_required(VERSION 3.16)
-# project(BudgetApp)
-
-# set(CMAKE_CXX_STANDARD 17)
-
-# # Find Qt
-# find_package(Qt5 COMPONENTS Widgets REQUIRED)
-
-# add_executable(BudgetApp src/main.cpp src/UI.cpp src/BudgetManager.cpp)
-# target_include_directories(BudgetApp PRIVATE include)
-# target_link_libraries(BudgetApp Qt5::Widgets)
-
-# # Add SQLite
-# add_library(sqlite3 STATIC SQLite/sqlite3.c)
-# include_directories(SQLite/)
-# target_link_libraries(BudgetApp sqlite3)
-
-# #Find date
-# set(CMAKE_TOOLCHAIN_FILE "${CMAKE_SOURCE_DIR}/vcpkg/scripts/buildsystems/vcpkg.cmake" CACHE STRING "")
-# find_package(date CONFIG REQUIRED)
-
-# target_link_libraries(BudgetApp PRIVATE date::date)
-
-# cmake_minimum_required(VERSION 3.16)
-
+# Created by Chris on 2025-03-01
 # VCPKG must be set before the project() command
 cmake_minimum_required(VERSION 3.16)
 
@@ -49,11 +25,26 @@ add_executable(BudgetApp
     src/DatabaseManager.cpp
 )
 
+# Add the test executable
+add_executable(BudgetAppTests
+    tests/test.cpp
+    src/BudgetManager.cpp
+    src/DatabaseManager.cpp
+)
+
 # Include headers
 target_include_directories(BudgetApp PRIVATE include SQLite/)
+# Include headers for tests
+target_include_directories(BudgetAppTests PRIVATE include SQLite/)
 
 # Link libraries
 target_link_libraries(BudgetApp
+    Qt5::Widgets
+    sqlite3
+    date::date
+)
+# Link libraries for tests
+target_link_libraries(BudgetAppTests
     Qt5::Widgets
     sqlite3
     date::date

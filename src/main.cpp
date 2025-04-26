@@ -5,7 +5,7 @@
 
 int main()
 {
-    auto db = std::make_unique<DatabaseManager>("transactions.db");
+    auto db = std::make_unique<DatabaseManager>("SQLite/transactions.db");
     auto bm = std::make_unique<BudgetManager>(std::move(db));
     UI appUI(std::move(bm));
     appUI.run();

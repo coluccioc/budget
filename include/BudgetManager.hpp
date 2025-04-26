@@ -28,6 +28,7 @@ public:
     BudgetManager(std::unique_ptr<DatabaseManager> db);
     void addExpense(const Transaction& t);
     const std::multiset<Transaction>& getTransactions();
+    void deleteAllTransactions();
     static normalDateStatus validateAndNormalizeDate(const std::string& date);
     static ValidationResult validateAmount(const std::string& amount);
     static ValidationResult validateString(const std::string& str);

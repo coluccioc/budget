@@ -22,6 +22,12 @@ const std::multiset<Transaction>& BudgetManager::getTransactions()
     return db->getTransactions();
 }
 
+void BudgetManager::deleteAllTransactions()
+{
+    db->deleteAllTransactions();
+    transactions.clear(); // Clear the in-memory transactions as well
+}
+
 normalDateStatus BudgetManager::validateAndNormalizeDate(const std::string& dateStr)
 {
     const std::vector<std::string> formats = {

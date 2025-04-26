@@ -15,10 +15,12 @@ DatabaseManager::DatabaseManager(const std::string& dbPath)
         initializeDatabase();
     }
 }
+
 DatabaseManager::~DatabaseManager() 
 {
     closeDatabase();
 }
+
 bool DatabaseManager::initializeDatabase()
 {
     const char* sql = "CREATE TABLE IF NOT EXISTS transactions ("
@@ -28,7 +30,8 @@ bool DatabaseManager::initializeDatabase()
                       "date TEXT NOT NULL,"
                       "category TEXT NOT NULL);";
     char* errMsg = nullptr;
-    if (sqlite3_exec(db, sql, nullptr, nullptr, &errMsg) != SQLITE_OK) {
+    if (sqlite3_exec(db, sql, nullptr, nullptr, &errMsg) != SQLITE_OK)
+    {
         std::cerr << "Failed to create table: " << errMsg << std::endl;
         sqlite3_free(errMsg);
         return false;
@@ -38,7 +41,8 @@ bool DatabaseManager::initializeDatabase()
 
 bool DatabaseManager::openDatabase()
 {
-    if (sqlite3_open(databasePath.c_str(), &db) != SQLITE_OK) {
+    if (sqlite3_open(databasePath.c_str(), &db) != SQLITE_OK)
+    {
         std::cerr << "Can't open database: " << sqlite3_errmsg(db) << std::endl;
         return false;
     }
@@ -47,7 +51,8 @@ bool DatabaseManager::openDatabase()
 
 void DatabaseManager::closeDatabase()
 {
-    if (db) {
+    if (db)
+    {
         //std::cout << "DB CLOSED!";
         sqlite3_close(db);
         db = nullptr;
@@ -56,7 +61,8 @@ void DatabaseManager::closeDatabase()
 
 bool DatabaseManager::isOpen()
 {
-    if (db) {
+    if (db)
+    {
         return true;
     }
     return false;
@@ -68,7 +74,8 @@ bool DatabaseManager::insertTransaction(const Transaction& transaction)
     const char* sql = "INSERT INTO transactions (description, amount, date, category) VALUES (?, ?, ?, ?);";
     sqlite3_stmt* stmt;
     // std::cout << "preparing";
-    if (sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr) != SQLITE_OK) {
+    if (sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr) != SQLITE_OK)
+    {
         std::cout << "Failed to prepare statement: " << sqlite3_errmsg(db) << std::endl;
         return false;
     }
@@ -79,7 +86,8 @@ bool DatabaseManager::insertTransaction(const Transaction& transaction)
     sqlite3_bind_text(stmt, 4, transaction.category.c_str(), -1, SQLITE_STATIC);
 
     // std::cout << "Bound";
-    if (sqlite3_step(stmt) != SQLITE_DONE) {
+    if (sqlite3_step(stmt) != SQLITE_DONE)
+    {
         std::cerr << "Failed to insert transaction: " << sqlite3_errmsg(db) << std::endl;
         sqlite3_finalize(stmt);
         return false;
@@ -88,17 +96,20 @@ bool DatabaseManager::insertTransaction(const Transaction& transaction)
     sqlite3_finalize(stmt);
     return true;
 }
+
 bool DatabaseManager::fetchTransactions()
 {
     const char* sql = "SELECT description, amount, date, category FROM transactions;";
     sqlite3_stmt* stmt;
-    if (sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr) != SQLITE_OK) {
+    if (sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr) != SQLITE_OK)
+    {
         std::cout << "Failed to prepare statement: " << sqlite3_errmsg(db) << std::endl;
         return false;
     }
     transactions.clear(); // Clear previous transactions
 
-    while (sqlite3_step(stmt) == SQLITE_ROW) {
+    while (sqlite3_step(stmt) == SQLITE_ROW)
+    {
         Transaction transaction;
         transaction.description = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 0));
         transaction.amount = sqlite3_column_double(stmt, 1);
@@ -110,6 +121,21 @@ bool DatabaseManager::fetchTransactions()
     sqlite3_finalize(stmt);
     return true;
 }
-const std::multiset<Transaction>& DatabaseManager::getTransactions(){
+
+const std::multiset<Transaction>& DatabaseManager::getTransactions()
+{
     return transactions;
+}
+
+bool DatabaseManager::deleteAllTransactions()
+{
+    const char* sql = "DELETE FROM transactions;";
+    char* errMsg = nullptr;
+    if (sqlite3_exec(db, sql, nullptr, nullptr, &errMsg) != SQLITE_OK)
+    {
+        std::cerr << "Failed to clear transactions: " << errMsg << std::endl;
+        sqlite3_free(errMsg);
+        return false;
+    }
+    return true;
 }

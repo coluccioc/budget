@@ -10,9 +10,11 @@ class DatabaseManager
     public:
         DatabaseManager(const std::string& dbPath);
         ~DatabaseManager();
+        bool isOpen();
         bool fetchTransactions();
         bool insertTransaction(const Transaction& transaction);
         const std::multiset<Transaction>& getTransactions();
+        bool deleteAllTransactions();
     private:
         bool initializeDatabase(); // sets up table
         bool openDatabase();

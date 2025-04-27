@@ -4,7 +4,7 @@
 #include "date/date.h"
 #include <sstream>
 #include <vector>
-#include "databaseManager.hpp"
+#include "DatabaseManager.hpp"
 
 enum class ValidationResult
 {

@@ -28,8 +28,9 @@ void UI::displayMenu()
 {
     std::cout << "+++ Budget Menu +++\n";
     std::cout << "1. Add expense\n";
-    std::cout << "2. View expenses\n";
-    std::cout << "3. Run script\n";
+    std::cout << "2. View transactions\n";
+    std::cout << "3. Delete all transactions\n";
+    std::cout << "4. Run script\n";
     std::cout << "0. Exit\n";
 }
 
@@ -44,7 +45,11 @@ int UI::handleInput(int choice)
             viewExpenses();
             return 0;
         case 3:
-            runScript("python src\\script.py");
+            bm->deleteAllTransactions();
+            std::cout << "Deleted all transactions\n";
+            return 0;
+        case 4:
+            runScript("python python\\script.py");
             return 0;
         case 0:
             return 1;
@@ -176,4 +181,10 @@ std::string UI::trim(const std::string& str)
     if (first == std::string::npos) return ""; // All whitespace
     size_t last = str.find_last_not_of(" \t\n\r\f\v");
     return str.substr(first, (last - first + 1));
+}
+
+void UI::deleteAllTransactions()
+{
+    bm->deleteAllTransactions();
+    std::cout << "Deleted all transactions\n";
 }

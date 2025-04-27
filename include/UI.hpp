@@ -31,6 +31,7 @@ private:
     int handleInput(int choice);
     void addExpense();
     void viewExpenses();
+    void deleteAllTransactions();
     void runScript(const std::string& scriptPath);
     std::string trim(const std::string& str);
 };

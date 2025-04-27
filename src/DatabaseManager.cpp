@@ -16,7 +16,7 @@ DatabaseManager::DatabaseManager(const std::string& dbPath)
     }
 }
 
-DatabaseManager::~DatabaseManager() 
+DatabaseManager::~DatabaseManager()
 {
     closeDatabase();
 }

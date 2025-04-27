@@ -28,7 +28,7 @@ void UI::displayMenu()
 {
     std::cout << "+++ Budget Menu +++\n";
     std::cout << "1. Add expense\n";
-    std::cout << "2. View expenses\n";
+    std::cout << "2. View transactions\n";
     std::cout << "3. Delete all transactions\n";
     std::cout << "4. Run script\n";
     std::cout << "0. Exit\n";

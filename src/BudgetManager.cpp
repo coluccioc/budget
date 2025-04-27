@@ -10,7 +10,9 @@
     NONNUMERIC,
     EXCEEDS
 */
-BudgetManager::BudgetManager(std::unique_ptr<DatabaseManager> db) : db(std::move(db)){}; // Initialize the databse manager
+BudgetManager::BudgetManager(std::unique_ptr<DatabaseManager> db) : 
+    db(std::move(db)) {}; // Initialize the databse manager
+
 void BudgetManager::addExpense(const Transaction& t)
 {
     db->insertTransaction(t);
@@ -80,7 +82,7 @@ ValidationResult BudgetManager::validateAmount(const std::string& amount)
     {
         return ValidationResult::NEGATIVE;
     }
-    if (std::stod(amount) > 9999999999999999.99)
+    if (std::stod(amount) > 999999999.99)
     {
         return ValidationResult::EXCEEDS;
     }

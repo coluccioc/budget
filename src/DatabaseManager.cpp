@@ -99,7 +99,7 @@ bool DatabaseManager::insertTransaction(const Transaction& transaction)
 
 bool DatabaseManager::fetchTransactions()
 {
-    const char* sql = "SELECT description, amount, date, category FROM transactions;";
+    const char* sql = "SELECT id, description, amount, date, category FROM transactions;";
     sqlite3_stmt* stmt;
     if (sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr) != SQLITE_OK)
     {
@@ -111,10 +111,11 @@ bool DatabaseManager::fetchTransactions()
     while (sqlite3_step(stmt) == SQLITE_ROW)
     {
         Transaction transaction;
-        transaction.description = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 0));
-        transaction.amount = sqlite3_column_double(stmt, 1);
-        transaction.date = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 2));
-        transaction.category = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 3));
+        transaction.id = sqlite3_column_int(stmt, 0);
+        transaction.description = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 1));
+        transaction.amount = sqlite3_column_double(stmt, 2);
+        transaction.date = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 3));
+        transaction.category = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 4));
         transactions.insert(transaction);
     }
 

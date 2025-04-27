@@ -7,6 +7,7 @@ struct Transaction
     double amount;
     std::string date;
     std::string category;
+    int id = 0; // 0 means not set
 
     bool operator<(const Transaction& other) const
     { 

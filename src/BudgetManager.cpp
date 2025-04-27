@@ -74,14 +74,15 @@ ValidationResult BudgetManager::validateAmount(const std::string& amount)
     {
         return ValidationResult::EMPTY;
     }
-    if (amount.find_first_not_of("0123456789.") != std::string::npos)
-    {
-        return ValidationResult::NONNUMERIC;
-    }
     if (amount.find_first_of("-") != std::string::npos)
     {
         return ValidationResult::NEGATIVE;
     }
+    if (amount.find_first_not_of("0123456789.") != std::string::npos)
+    {
+        return ValidationResult::NONNUMERIC;
+    }
+
     if (std::stod(amount) > 999999999.99)
     {
         return ValidationResult::EXCEEDS;

@@ -13,12 +13,21 @@
 BudgetManager::BudgetManager(std::unique_ptr<DatabaseManager> db) : 
     db(std::move(db)) {}; // Initialize the databse manager
 
+// addExpense expects a validated transaction object
 void BudgetManager::addExpense(const Transaction& t)
 {
     db->insertTransaction(t);
 }
 
-const std::multiset<Transaction>& BudgetManager::getTransactions()
+void BudgetManager::addExpenseList(const std::vector<Transaction>& transactions)
+{
+    for (const auto& transaction : transactions)
+    {
+        db->insertTransaction(transaction);
+    }
+}
+
+const std::vector<Transaction>& BudgetManager::getTransactions()
 {
     db->fetchTransactions();
     return db->getTransactions();
@@ -30,6 +39,7 @@ void BudgetManager::deleteAllTransactions()
     transactions.clear(); // Clear the in-memory transactions as well
 }
 
+// Performs validation and returns a string in the format YYYY-MM-DD
 normalDateStatus BudgetManager::validateAndNormalizeDate(const std::string& dateStr)
 {
     const std::vector<std::string> formats = {
@@ -69,7 +79,6 @@ normalDateStatus BudgetManager::validateAndNormalizeDate(const std::string& date
 
 ValidationResult BudgetManager::validateAmount(const std::string& amount)
 {
-    //Do stuff
     if (amount.empty())
     {
         return ValidationResult::EMPTY;
@@ -92,7 +101,6 @@ ValidationResult BudgetManager::validateAmount(const std::string& amount)
 
 ValidationResult BudgetManager::validateString(const std::string& str)
 {
-    //Do stuff
     if (str.empty())
     {
         return ValidationResult::EMPTY;

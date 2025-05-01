@@ -2,6 +2,7 @@
 
 UI::UI(std::unique_ptr<BudgetManager> bm) : bm(std::move(bm)) {};
 
+// Main loop for UI actions
 void UI::run()
 {
     std::string choiceStr;
@@ -26,11 +27,16 @@ void UI::run()
 
 void UI::displayMenu()
 {
-    std::cout << "+++ Budget Menu +++\n";
-    std::cout << "1. Add expense\n";
-    std::cout << "2. View transactions\n";
-    std::cout << "3. Delete all transactions\n";
-    std::cout << "4. Run script\n";
+    std::vector<std::string> menuOptions = {
+        "Add expense",
+        "View transactions",
+        "Delete all transactions",
+        "Run script",
+    };
+    for (int i = 0; i < menuOptions.size(); ++i)
+    {
+        std::cout << i + 1 << ". " << menuOptions[i] << "\n";
+    }
     std::cout << "0. Exit\n";
 }
 
@@ -162,7 +168,7 @@ void UI::addExpense()
 
 void UI::viewExpenses()
 {
-    std::cout << "Viewing expenses...\n";
+    std::cout << "Viewing transactions...\n";
     for(auto& t: bm->getTransactions())
     {
         std::cout << t.date << " " << t.description << " $" << t.amount << " " << t.category << "\n";

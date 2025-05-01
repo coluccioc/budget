@@ -1,5 +1,4 @@
 #pragma once
-#include <set>
 #include <Transaction.hpp>
 #include "date/date.h"
 #include <sstream>
@@ -27,7 +26,8 @@ class BudgetManager
 public:
     BudgetManager(std::unique_ptr<DatabaseManager> db);
     void addExpense(const Transaction& t);
-    const std::multiset<Transaction>& getTransactions();
+    void addExpenseList(const std::vector<Transaction>& transactions);
+    const std::vector<Transaction>& getTransactions();
     void deleteAllTransactions();
     static normalDateStatus validateAndNormalizeDate(const std::string& date);
     static ValidationResult validateAmount(const std::string& amount);
@@ -35,6 +35,6 @@ public:
 
 
 private:
-    std::multiset<Transaction> transactions;
+    std::vector<Transaction> transactions;
     std::unique_ptr<DatabaseManager> db;
 };

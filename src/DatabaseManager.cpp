@@ -11,7 +11,6 @@ DatabaseManager::DatabaseManager(const std::string& dbPath)
     }
     else
     {
-        // std::cout << "Database opened successfully." << std::endl;
         initializeDatabase();
     }
 }
@@ -53,7 +52,6 @@ void DatabaseManager::closeDatabase()
 {
     if (db)
     {
-        //std::cout << "DB CLOSED!";
         sqlite3_close(db);
         db = nullptr;
     }
@@ -70,36 +68,32 @@ bool DatabaseManager::isOpen()
 
 bool DatabaseManager::insertTransaction(const Transaction& transaction)
 {
-    // std::cout << "Beginning";
     const char* sql = "INSERT INTO transactions (description, amount, date, category) VALUES (?, ?, ?, ?);";
     sqlite3_stmt* stmt;
-    // std::cout << "preparing";
     if (sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr) != SQLITE_OK)
     {
         std::cout << "Failed to prepare statement: " << sqlite3_errmsg(db) << std::endl;
         return false;
     }
-    // std::cout << "Binding";
+    // Bind parameters to prepared statement
     sqlite3_bind_text(stmt, 1, transaction.description.c_str(), -1, SQLITE_STATIC);
     sqlite3_bind_double(stmt, 2, transaction.amount);
     sqlite3_bind_text(stmt, 3, transaction.date.c_str(), -1, SQLITE_STATIC);
     sqlite3_bind_text(stmt, 4, transaction.category.c_str(), -1, SQLITE_STATIC);
 
-    // std::cout << "Bound";
     if (sqlite3_step(stmt) != SQLITE_DONE)
     {
         std::cerr << "Failed to insert transaction: " << sqlite3_errmsg(db) << std::endl;
         sqlite3_finalize(stmt);
         return false;
     }
-    // std::cout << "Inserted";
     sqlite3_finalize(stmt);
     return true;
 }
 
 bool DatabaseManager::fetchTransactions()
 {
-    const char* sql = "SELECT id, description, amount, date, category FROM transactions;";
+    const char* sql = "SELECT id, description, amount, date, category FROM transactions ORDER BY date DESC;";
     sqlite3_stmt* stmt;
     if (sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr) != SQLITE_OK)
     {
@@ -116,14 +110,14 @@ bool DatabaseManager::fetchTransactions()
         transaction.amount = sqlite3_column_double(stmt, 2);
         transaction.date = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 3));
         transaction.category = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 4));
-        transactions.insert(transaction);
+        transactions.push_back(transaction);
     }
 
     sqlite3_finalize(stmt);
     return true;
 }
 
-const std::multiset<Transaction>& DatabaseManager::getTransactions()
+const std::vector<Transaction>& DatabaseManager::getTransactions()
 {
     return transactions;
 }

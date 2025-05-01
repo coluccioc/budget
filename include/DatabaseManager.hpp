@@ -1,7 +1,7 @@
 #pragma once
 #include "../SQLite/sqlite3.h"
 #include <string>
-#include <set>
+#include <vector>
 #include "Transaction.hpp"
 #include <iostream>
 
@@ -13,7 +13,7 @@ class DatabaseManager
         bool isOpen();
         bool fetchTransactions();
         bool insertTransaction(const Transaction& transaction);
-        const std::multiset<Transaction>& getTransactions();
+        const std::vector<Transaction>& getTransactions();
         bool deleteAllTransactions();
     private:
         bool initializeDatabase(); // sets up table
@@ -21,5 +21,5 @@ class DatabaseManager
         void closeDatabase();
         sqlite3* db;
         std::string databasePath;
-        std::multiset<Transaction> transactions; // Store transactions in memory
+        std::vector<Transaction> transactions; // Store transactions in memory
 };

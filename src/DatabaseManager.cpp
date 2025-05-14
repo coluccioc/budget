@@ -91,16 +91,49 @@ bool DatabaseManager::insertTransaction(const Transaction& transaction)
     return true;
 }
 
-bool DatabaseManager::fetchTransactions()
+bool DatabaseManager::fetchTransactions(const std::string& startDate, const std::string& endDate)
 {
-    const char* sql = "SELECT id, description, amount, date, category FROM transactions ORDER BY date DESC;";
+    // Conditional date filtering
+    std::string sql = "SELECT id, description, amount, date, category FROM transactions ";
+    bool hasStart = !startDate.empty();
+    bool hasEnd = !endDate.empty();
+
+    // Structure SQL query based on provided date arguments
+    if (hasStart && hasEnd)
+    {
+        sql += "WHERE date BETWEEN ? AND ? ";
+    }
+    else if (hasStart)
+    {
+        sql += "WHERE date >= ? ";
+    }
+    else if (hasEnd)
+    {
+        sql += "WHERE date <= ? ";
+    }
+    sql += "ORDER BY date DESC;";
+
     sqlite3_stmt* stmt;
-    if (sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr) != SQLITE_OK)
+
+    if (sqlite3_prepare_v2(db, sql.c_str(), -1, &stmt, nullptr) != SQLITE_OK)
     {
         std::cout << "Failed to prepare statement: " << sqlite3_errmsg(db) << std::endl;
         return false;
     }
     transactions.clear(); // Clear previous transactions
+
+    // Bind parameters to prepared statement conditionally
+    int bindIndex = 1;
+    if (hasStart)
+    {
+        sqlite3_bind_text(stmt, bindIndex, startDate.c_str(), -1, SQLITE_STATIC);
+        bindIndex++;
+    }
+    if (hasEnd)
+    {
+        sqlite3_bind_text(stmt, bindIndex, endDate.c_str(), -1, SQLITE_STATIC);
+        bindIndex++;
+    }
 
     while (sqlite3_step(stmt) == SQLITE_ROW)
     {

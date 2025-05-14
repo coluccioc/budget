@@ -11,7 +11,7 @@ class DatabaseManager
         DatabaseManager(const std::string& dbPath);
         ~DatabaseManager();
         bool isOpen();
-        bool fetchTransactions();
+        bool fetchTransactions(const std::string& startDate = "", const std::string& endDate = "");
         bool insertTransaction(const Transaction& transaction);
         const std::vector<Transaction>& getTransactions();
         bool deleteAllTransactions();

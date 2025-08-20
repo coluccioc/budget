@@ -33,6 +33,9 @@
 
 #folders
 build/
+libs/
+archive/
+SQLite/
 
 # Python cache & virtual env
 __pycache__/

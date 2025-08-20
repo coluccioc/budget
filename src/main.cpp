@@ -1,13 +1,11 @@
 #pragma once
-#include "../include/UI.hpp"
-#include "sqlite3.h"
-#include "DatabaseManager.hpp"
+#include "WebServer.hpp"
 
 int main()
 {
     auto db = std::make_unique<DatabaseManager>("SQLite/transactions.db");
     auto bm = std::make_unique<BudgetManager>(std::move(db));
-    UI appUI(std::move(bm));
-    appUI.run();
+    WebServer server(std::move(bm));
+    server.run();
     return 0;
 }

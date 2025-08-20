@@ -5,7 +5,8 @@
             "includePath": [
                 "${workspaceFolder}/**",
                 "C:\\Qt\\6.8.2\\mingw_64\\include/**",
-                "C:/VCPkg/vcpkg/installed/x64-windows/include/**"
+                "C:/VCPkg/vcpkg/installed/x64-windows/include/**",
+                "C:/Boost/boost_1_89_0"
             ],
             "defines": [
                 "_DEBUG",

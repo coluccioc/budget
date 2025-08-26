@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include <nlohmann/json.hpp>
 
 struct Transaction
 {
@@ -18,4 +19,15 @@ struct Transaction
     {
         return description == other.description && amount == other.amount && date == other.date && category == other.category;
     }
+};
+
+inline void to_json(nlohmann::json& j, const Transaction& t)
+{
+    j = nlohmann::json{
+        {"id", t.id},
+        {"description", t.description},
+        {"amount", t.amount},
+        {"date", t.date},
+        {"category", t.category}
+    };
 };

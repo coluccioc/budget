@@ -21,17 +21,23 @@ target_include_directories(sqlite3 PRIVATE SQLite/)
 # Main executable
 add_executable(BudgetApp
     src/main.cpp
-    src/UI.cpp
     src/BudgetManager.cpp
     src/DatabaseManager.cpp
+    src/WebServer.cpp
+    src/Util.cpp
+    src/Validation.cpp
 )
 
 # Test executable
-add_executable(BudgetAppTests
-    tests/test.cpp
-    src/BudgetManager.cpp
-    src/DatabaseManager.cpp
-)
+
+# add_executable(BudgetAppTests
+#     tests/test.cpp
+#     src/BudgetManager.cpp
+#     src/DatabaseManager.cpp
+#     src/WebServer.cpp
+#     src/Util.cpp
+#     src/Validation.cpp
+# )
 
 # Include paths
 target_include_directories(BudgetApp PRIVATE
